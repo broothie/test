@@ -4,9 +4,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/broothie/test/mocks"
 	"go.uber.org/mock/gomock"
+
+	"github.com/broothie/test/mocks"
 )
+
+const errorfFormat = "got: %+v, want: %+v"
 
 func Test_assertions(t *testing.T) {
 	unwrappedError := errors.New("unwrapped")
@@ -20,6 +23,17 @@ func Test_assertions(t *testing.T) {
 	}
 
 	testCases := map[string]TestCase{
+		"DeepEqual pass": {
+			run:            func(t TestingT) bool { return DeepEqual(t, map[string]any{"a": 1}, map[string]any{"a": 1}) },
+			expectedResult: true,
+		},
+		"DeepEqual false": {
+			run: func(t TestingT) bool { return DeepEqual(t, map[string]any{"a": 1}, map[string]any{"a": 2}) },
+			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
+			},
+			expectedResult: false,
+		},
 		"Equal pass": {
 			run:            func(t TestingT) bool { return Equal(t, 10, 10) },
 			expectedResult: true,
@@ -27,7 +41,7 @@ func Test_assertions(t *testing.T) {
 		"Equal fail": {
 			run: func(t TestingT) bool { return Equal(t, 10, 11) },
 			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
-				mockTestingT.EXPECT().Errorf(errorfFormat, 10, 11)
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
 			expectedResult: false,
 		},
@@ -38,7 +52,7 @@ func Test_assertions(t *testing.T) {
 		"True fail": {
 			run: func(t TestingT) bool { return True(t, false) },
 			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
-				mockTestingT.EXPECT().Errorf(errorfFormat, false, true)
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
 			expectedResult: false,
 		},
@@ -49,7 +63,7 @@ func Test_assertions(t *testing.T) {
 		"False fail": {
 			run: func(t TestingT) bool { return False(t, true) },
 			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
-				mockTestingT.EXPECT().Errorf(errorfFormat, true, false)
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
 			expectedResult: false,
 		},
@@ -60,7 +74,7 @@ func Test_assertions(t *testing.T) {
 		"ErrorIs fail": {
 			run: func(t TestingT) bool { return ErrorIs(t, unwrappedError, otherError) },
 			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
-				mockTestingT.EXPECT().Errorf(errorfFormat, unwrappedError, otherError)
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
 			expectedResult: false,
 		},
@@ -71,7 +85,7 @@ func Test_assertions(t *testing.T) {
 		"NoError fail": {
 			run: func(t TestingT) bool { return NoError(t, wrappedError) },
 			mockExpectations: func(mockTestingT *mocks.MockTestingT) {
-				mockTestingT.EXPECT().Errorf(errorfFormat, wrappedError, nil)
+				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
 			expectedResult: false,
 		},
@@ -105,7 +119,7 @@ func TestMustNoError(t *testing.T) {
 		err := errors.New("some error")
 
 		testMock := newMockTestingT(t)
-		testMock.EXPECT().Errorf(errorfFormat, err, nil)
+		testMock.EXPECT().Error(gomock.AssignableToTypeOf(""))
 		testMock.EXPECT().FailNow()
 
 		MustNoError(testMock, err)
@@ -127,7 +141,7 @@ func TestMust(t *testing.T) {
 		err := errors.New("some error")
 
 		testMock := newMockTestingT(t)
-		testMock.EXPECT().Errorf(errorfFormat, err, nil)
+		testMock.EXPECT().Error(gomock.AssignableToTypeOf(""))
 		testMock.EXPECT().FailNow()
 
 		Must(testMock, func() (string, error) { return "value", err })

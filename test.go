@@ -2,14 +2,23 @@ package test
 
 import (
 	"errors"
+	"reflect"
+
+	"github.com/davecgh/go-spew/spew"
+	"github.com/kylelemons/godebug/diff"
 )
 
-const errorfFormat = "got %+v, want %+v"
-
+//go:generate go run go.uber.org/mock/mockgen@v0.5.0 --destination mocks/testing_t.go --package mocks . TestingT
 type TestingT interface {
 	Helper()
-	Errorf(string, ...any)
+	Error(...any)
 	FailNow()
+}
+
+func DeepEqual(t TestingT, got, want any) bool {
+	t.Helper()
+
+	return assertf(t, reflect.DeepEqual(got, want), got, want)
 }
 
 func Equal[T comparable](t TestingT, got, want T) bool {
@@ -58,11 +67,11 @@ func Must[T any](t TestingT, f func() (T, error)) T {
 	return result
 }
 
-func assertf[T any](t TestingT, assertion bool, got, want T) bool {
+func assertf(t TestingT, assertion bool, got, want any) bool {
 	t.Helper()
 
 	if !assertion {
-		t.Errorf(errorfFormat, got, want)
+		t.Error(diff.Diff(spew.Sdump(got), spew.Sdump(want)))
 	}
 
 	return assertion

@@ -19,6 +19,7 @@ import (
 type MockTestingT struct {
 	ctrl     *gomock.Controller
 	recorder *MockTestingTMockRecorder
+	isgomock struct{}
 }
 
 // MockTestingTMockRecorder is the mock recorder for MockTestingT.
@@ -38,21 +39,20 @@ func (m *MockTestingT) EXPECT() *MockTestingTMockRecorder {
 	return m.recorder
 }
 
-// Errorf mocks base method.
-func (m *MockTestingT) Errorf(arg0 string, arg1 ...any) {
+// Error mocks base method.
+func (m *MockTestingT) Error(arg0 ...any) {
 	m.ctrl.T.Helper()
-	varargs := []any{arg0}
-	for _, a := range arg1 {
+	varargs := []any{}
+	for _, a := range arg0 {
 		varargs = append(varargs, a)
 	}
-	m.ctrl.Call(m, "Errorf", varargs...)
+	m.ctrl.Call(m, "Error", varargs...)
 }
 
-// Errorf indicates an expected call of Errorf.
-func (mr *MockTestingTMockRecorder) Errorf(arg0 any, arg1 ...any) *gomock.Call {
+// Error indicates an expected call of Error.
+func (mr *MockTestingTMockRecorder) Error(arg0 ...any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	varargs := append([]any{arg0}, arg1...)
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Errorf", reflect.TypeOf((*MockTestingT)(nil).Errorf), varargs...)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Error", reflect.TypeOf((*MockTestingT)(nil).Error), arg0...)
 }
 
 // FailNow mocks base method.
