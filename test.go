@@ -2,6 +2,7 @@ package test
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 
 	"github.com/davecgh/go-spew/spew"
@@ -71,7 +72,7 @@ func assertf(t TestingT, assertion bool, got, want any) bool {
 	t.Helper()
 
 	if !assertion {
-		t.Error(diff.Diff(spew.Sdump(got), spew.Sdump(want)))
+		t.Error(fmt.Sprintf("%s\n", diff.Diff(spew.Sdump(got), spew.Sdump(want))))
 	}
 
 	return assertion
