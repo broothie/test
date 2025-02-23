@@ -11,7 +11,7 @@ import (
 func Equal[T comparable](t TestingT, actual, expected T) bool {
 	t.Helper()
 
-	return assert(t, actual == expected, fmt.Sprintf("%v to == %v;\n%s", actual, expected, diff.Diff(spew.Sdump(actual), spew.Sdump(expected))))
+	return assert(t, actual == expected, fmt.Sprintf("%v to == %v:\n%s", actual, expected, diff.Diff(spew.Sdump(actual), spew.Sdump(expected))))
 }
 
 func NotEqual[T comparable](t TestingT, actual, expected T) bool {
@@ -23,7 +23,7 @@ func NotEqual[T comparable](t TestingT, actual, expected T) bool {
 func DeepEqual(t TestingT, actual, expected any) bool {
 	t.Helper()
 
-	return assert(t, reflect.DeepEqual(actual, expected), fmt.Sprintf("%v to deep equal %v;\n%s", actual, expected, diff.Diff(spew.Sdump(actual), spew.Sdump(expected))))
+	return assert(t, reflect.DeepEqual(actual, expected), fmt.Sprintf("%v to deep equal %v:\n%s", actual, expected, diff.Diff(spew.Sdump(actual), spew.Sdump(expected))))
 }
 
 func NotDeepEqual(t TestingT, actual, expected any) bool {
