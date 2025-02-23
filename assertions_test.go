@@ -79,12 +79,12 @@ func Test_assertions(t *testing.T) {
 			},
 			expectedResult: false,
 		},
-		"NoError pass": {
-			run:            func(t test.TestingT) bool { return test.NoError(t, nil) },
+		"Nil pass": {
+			run:            func(t test.TestingT) bool { return test.Nil(t, nil) },
 			expectedResult: true,
 		},
-		"NoError fail": {
-			run: func(t test.TestingT) bool { return test.NoError(t, wrappedError) },
+		"Nil fail": {
+			run: func(t test.TestingT) bool { return test.Nil(t, wrappedError) },
 			mockExpectations: func(mockTestingT *mocktesting.MockTestingT) {
 				mockTestingT.EXPECT().Error(gomock.AssignableToTypeOf(""))
 			},
