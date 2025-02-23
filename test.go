@@ -9,13 +9,6 @@ import (
 	"github.com/kylelemons/godebug/diff"
 )
 
-//go:generate go run go.uber.org/mock/mockgen@v0.5.0 --destination mocks/testing_t.go --package mocks . TestingT
-type TestingT interface {
-	Helper()
-	Error(...any)
-	FailNow()
-}
-
 func DeepEqual(t TestingT, got, want any) bool {
 	t.Helper()
 
