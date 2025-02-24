@@ -29,5 +29,5 @@ func DeepEqual(t TestingT, actual, expected any) bool {
 func NotDeepEqual(t TestingT, actual, expected any) bool {
 	t.Helper()
 
-	return assert(t, reflect.DeepEqual(actual, expected), fmt.Sprintf("%v to not deep equal %v", actual, expected))
+	return assert(t, !reflect.DeepEqual(actual, expected), fmt.Sprintf("%v to not deep equal %v", actual, expected))
 }
