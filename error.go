@@ -37,7 +37,7 @@ func NotErrorIs(t TestingT, actual, expected error) bool {
 func MustNoError(t TestingT, err error) {
 	t.Helper()
 
-	if !Equal(t, err, nil) {
+	if !Nil(t, err) {
 		t.FailNow()
 	}
 }
