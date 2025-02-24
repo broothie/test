@@ -63,3 +63,59 @@ func NotContainsEntry[K, V comparable, M ~map[K]V](t TestingT, actual M, expecte
 	assertion := !slices.ContainsFunc(slices.Collect(maps.Keys(actual)), func(key K) bool { return key == expectedKey && actual[key] == expectedValue })
 	return assert(t, assertion, fmt.Sprintf("%v to not contain %v", actual, map[K]V{expectedKey: expectedValue}))
 }
+
+// ContainedIn asserts that an element is contained in a slice.
+func ContainedIn[T comparable, S ~[]T](t TestingT, actual T, expected S) bool {
+	t.Helper()
+
+	return assert(t, slices.Contains(expected, actual), fmt.Sprintf("%v to be contained in %v", actual, expected))
+}
+
+// NotContainedIn asserts that an element is not contained in a slice.
+func NotContainedIn[T comparable, S ~[]T](t TestingT, actual T, expected S) bool {
+	t.Helper()
+
+	return assert(t, !slices.Contains(expected, actual), fmt.Sprintf("%v to not be contained in %v", actual, expected))
+}
+
+// ContainedInKeys asserts that a key is contained in a map.
+func ContainedInKeys[K comparable, V any, M ~map[K]V](t TestingT, actual K, expected M) bool {
+	t.Helper()
+
+	return assert(t, slices.Contains(slices.Collect(maps.Keys(expected)), actual), fmt.Sprintf("%v to be contained in keys of %v", actual, expected))
+}
+
+// NotContainedInKeys asserts that a key is not contained in a map.
+func NotContainedInKeys[K comparable, V any, M ~map[K]V](t TestingT, actual K, expected M) bool {
+	t.Helper()
+
+	return assert(t, !slices.Contains(slices.Collect(maps.Keys(expected)), actual), fmt.Sprintf("%v to not be contained in keys of %v", actual, expected))
+}
+
+// ContainedInValues asserts that a value is contained in a map.
+func ContainedInValues[K, V comparable, M ~map[K]V](t TestingT, actual V, expected M) bool {
+	t.Helper()
+
+	return assert(t, slices.Contains(slices.Collect(maps.Values(expected)), actual), fmt.Sprintf("%v to be contained in values of %v", actual, expected))
+}
+
+// NotContainedInValues asserts that a value is not contained in a map.
+func NotContainedInValues[K, V comparable, M ~map[K]V](t TestingT, actual V, expected M) bool {
+	t.Helper()
+
+	return assert(t, !slices.Contains(slices.Collect(maps.Values(expected)), actual), fmt.Sprintf("%v to not be contained in values of %v", actual, expected))
+}
+
+// ContainedInEntries asserts that a key-value pair is contained in a map.
+func ContainedInEntries[K, V comparable, M ~map[K]V](t TestingT, actualKey K, actualValue V, expected M) bool {
+	t.Helper()
+
+	return assert(t, slices.ContainsFunc(slices.Collect(maps.Keys(expected)), func(key K) bool { return key == actualKey && expected[key] == actualValue }), fmt.Sprintf("%v to contain entries %v", expected, map[K]V{actualKey: actualValue}))
+}
+
+// NotContainedInEntries asserts that a key-value pair is not contained in a map.
+func NotContainedInEntries[K, V comparable, M ~map[K]V](t TestingT, actualKey K, actualValue V, expected M) bool {
+	t.Helper()
+
+	return assert(t, !slices.ContainsFunc(slices.Collect(maps.Keys(expected)), func(key K) bool { return key == actualKey && expected[key] == actualValue }), fmt.Sprintf("%v to not contain entries %v", expected, map[K]V{actualKey: actualValue}))
+}
