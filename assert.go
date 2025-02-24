@@ -1,8 +1,6 @@
 package test
 
-import (
-	"fmt"
-)
+import "fmt"
 
 func assert(t TestingT, assertion bool, expectedMessage string) bool {
 	t.Helper()
