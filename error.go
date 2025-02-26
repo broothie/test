@@ -9,12 +9,20 @@ import (
 func ErrorMessageIs(t TestingT, actual error, expected string) bool {
 	t.Helper()
 
+	if actual == nil {
+		return assert(t, false, fmt.Sprintf("%v to be an error", actual))
+	}
+
 	return assert(t, actual.Error() == expected, fmt.Sprintf("%v to have message %q", actual, expected))
 }
 
 // NotErrorMessageIs asserts that an error's message does not match the expected string.
 func NotErrorMessageIs(t TestingT, actual error, expected string) bool {
 	t.Helper()
+
+	if actual == nil {
+		return assert(t, false, fmt.Sprintf("%v to be an error", actual))
+	}
 
 	return assert(t, actual.Error() != expected, fmt.Sprintf("%v to not have message %q", actual, expected))
 }
