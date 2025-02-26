@@ -33,11 +33,18 @@ func NotErrorIs(t TestingT, actual, expected error) bool {
 	return assert(t, !errors.Is(actual, expected), fmt.Sprintf("%v to not wrap %v", actual, expected))
 }
 
+// NoError asserts that an error is nil.
+func NoError(t TestingT, err error) bool {
+	t.Helper()
+
+	return assert(t, err == nil, fmt.Sprintf("%v to be nil", err))
+}
+
 // MustNoError fails the test immediately if the error is not nil.
 func MustNoError(t TestingT, err error) {
 	t.Helper()
 
-	if !Nil(t, err) {
+	if !NoError(t, err) {
 		t.FailNow()
 	}
 }

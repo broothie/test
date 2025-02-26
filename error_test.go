@@ -15,6 +15,16 @@ var (
 	errWrapped = fmt.Errorf("wrapped: %w", errBase)
 )
 
+func TestNoError(t *testing.T) {
+	t.Run("when error is nil", shouldPass(func(t test.TestingT) {
+		test.NoError(t, nil)
+	}))
+
+	t.Run("when error is not nil", shouldFail(func(t test.TestingT) {
+		test.NoError(t, errBase)
+	}))
+}
+
 func TestErrorMessageIs(t *testing.T) {
 	t.Run("when error message matches exactly", shouldPass(func(t test.TestingT) {
 		test.ErrorMessageIs(t, errors.New("foo"), "foo")
