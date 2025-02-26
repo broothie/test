@@ -33,6 +33,10 @@ func TestErrorMessageIs(t *testing.T) {
 	t.Run("when error message does not match", shouldFail(func(t test.TestingT) {
 		test.ErrorMessageIs(t, errors.New("foo"), "bar")
 	}))
+
+	t.Run("when error is nil", shouldFail(func(t test.TestingT) {
+		test.ErrorMessageIs(t, nil, "foo")
+	}))
 }
 
 func TestNotErrorMessageIs(t *testing.T) {
@@ -42,6 +46,10 @@ func TestNotErrorMessageIs(t *testing.T) {
 
 	t.Run("when error message matches exactly", shouldFail(func(t test.TestingT) {
 		test.NotErrorMessageIs(t, errors.New("foo"), "foo")
+	}))
+
+	t.Run("when error is nil", shouldFail(func(t test.TestingT) {
+		test.NotErrorMessageIs(t, nil, "foo")
 	}))
 }
 
