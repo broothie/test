@@ -31,6 +31,14 @@ func TestNotEqual(t *testing.T) {
 }
 
 func TestDeepEqual(t *testing.T) {
+	t.Run("when strings are deeply equal", shouldPass(func(t test.TestingT) {
+		test.DeepEqual(t, "hello", "hello")
+	}))
+
+	t.Run("when strings are not deeply equal", shouldFail(func(t test.TestingT) {
+		test.DeepEqual(t, "hello", "world")
+	}))
+
 	t.Run("when slices are deeply equal", shouldPass(func(t test.TestingT) {
 		test.DeepEqual(t, []int{1, 2, 3}, []int{1, 2, 3})
 	}))
